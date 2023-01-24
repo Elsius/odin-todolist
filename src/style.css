@@ -1,12 +1,12 @@
 body {
-    display: grid;
-    grid-template-columns: 1fr 5fr;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
 }
 nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 30px;
-    border: 2px solid red;
-    grid-column: 1 / span 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  border: 2px solid red;
+  grid-column: 1 / span 2;
 }
