@@ -10,3 +10,24 @@ nav {
   border: 2px solid red;
   grid-column: 1 / span 2;
 }
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo {
+    border: 1px solid black;
+    border-radius: 7px;
+    margin-top: 5px;
+    padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#projectHead {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
