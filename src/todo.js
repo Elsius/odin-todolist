@@ -1,3 +1,4 @@
+import { populateTodos } from "./dom.js";
 class TodoData {
   constructor(title, description, dueDate, priority, notes, checked) {
     this.title = title;
@@ -43,7 +44,26 @@ class TodoElement {
   }
 }
 
-function addTodo() {
+function createProjectElement(projects) {
+  const projectElement = document.createElement("button");
+  projectElement.innerHTML = `
+        <input type="checkbox">
+        <div>
+        ${projects.title}
+        </div>
+        <div>
+        ${projects.description}
+        </div>
+        <div>
+          <button class="delete">D</button>
+          <button class="edit">E</button>
+        </div>`;
+  projectElement.addEventListener("click", () => populateTodos(projects));
+  projectElement.classList.add("todo");
+  return projectElement;
+}
+
+function addItem() {
   const container = document.createElement("div");
   container.innerHTML = `
     <button>New Item</button>
@@ -51,4 +71,4 @@ function addTodo() {
   container.classList.add("todo");
   return container;
 }
-export { TodoData, Project, TodoElement, addTodo };
+export { TodoData, Project, TodoElement, createProjectElement, addItem };

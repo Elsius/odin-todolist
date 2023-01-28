@@ -17,17 +17,17 @@ main {
 }
 
 .todo {
-    border: 1px solid black;
-    border-radius: 7px;
-    margin-top: 5px;
-    padding: 5px;
+  border: 1px solid black;
+  border-radius: 7px;
+  margin-top: 5px;
+  padding: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 #projectHead {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
