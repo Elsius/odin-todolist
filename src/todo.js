@@ -21,21 +21,37 @@ class Project {
 class TodoElement {
   constructor(todoData) {
     const todoElement = document.createElement("div");
-    todoElement.innerHTML = `
-      <input type="checkbox">
-      <div>
-      ${todoData.title}
-      </div>
-      <div>
-      ${todoData.description}
-      </div>
-      <div>
-      ${todoData.priority}
-      </div>
-      <div>
-        <button class="delete">D</button>
-        <button class="edit">E</button>
-      </div>`;
+
+    const checkboxInput = document.createElement("input");
+    checkboxInput.type = "checkbox";
+    todoElement.appendChild(checkboxInput);
+
+    const title = document.createElement("div");
+    title.textContent = todoData.title;
+    todoElement.appendChild(title);
+
+    const description = document.createElement("div");
+    description.textContent = todoData.description;
+    todoElement.appendChild(description);
+
+    const priority = document.createElement("div");
+    priority.textContent = todoData.priority;
+    todoElement.appendChild(priority);
+
+    const buttonBox = document.createElement("div");
+
+    const deleteButton = document.createElement("button");
+    deleteButton.classList.add("delete");
+    deleteButton.textContent = "D";
+    buttonBox.appendChild(deleteButton);
+
+    const editButton = document.createElement("button");
+    editButton.classList.add("edit");
+    editButton.textContent = "E";
+    buttonBox.appendChild(editButton);
+
+    todoElement.appendChild(buttonBox);
+
     todoElement.classList.add("todo");
     if (todoData.checked === true) {
       todoElement.getElementsByTagName("input")[0].checked = true;
@@ -65,7 +81,7 @@ function createProjectElement(projects) {
 
 function addItem() {
   const container = document.createElement("button");
-  container.textContent = 'New Item'
+  container.textContent = "New Item";
   container.classList.add("todo");
   return container;
 }

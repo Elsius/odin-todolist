@@ -1,38 +1,59 @@
 import { addItem, createProjectElement, TodoElement } from "./todo";
-let projects = {}
+let projects = {};
 // initial HTML load
 function init() {
-  document.body.innerHTML = `
-  <nav>
-  <div>
-  <button>Menu</button>
-  <button>Home</button>
-      <input type="text">
-      </div>
-      <div>
-      user stuff here
-      </div>
-      </nav>
-      <sidebar>
-      <button id="todayToDo">Today</button>
-      <div id="projects">
-      <button id="viewAllProjects">View Projects</button>
-      </div>
-  </sidebar>
-  <main>
-  <h1 id='projectHead'></h1>
-    <div id='itemList'></div>
-    </main>`;
-    document.getElementById('viewAllProjects').addEventListener('click', initStorage)
-    // call storage loading function here
-    initStorage();
-  }
-  
+  const nav = document.createElement("nav");
+  const navDiv1 = document.createElement("div");
+  const menuButton = document.createElement("button");
+  const homeButton = document.createElement("button");
+  const inputText = document.createElement("input");
+  const navDiv2 = document.createElement("div");
+  const navUserStuff = document.createTextNode("user stuff here");
+  const sidebar = document.createElement("sidebar");
+  const todayToDoButton = document.createElement("button");
+  const projects = document.createElement("div");
+  const viewAllProjectsButton = document.createElement("button");
+  const main = document.createElement("main");
+  const projectHead = document.createElement("h1");
+  const itemList = document.createElement("div");
+
+  menuButton.textContent = "Menu";
+  homeButton.textContent = "Home";
+  inputText.type = "text";
+  todayToDoButton.textContent = "Today";
+  todayToDoButton.id = "todayToDo";
+  viewAllProjectsButton.textContent = "View Projects";
+  viewAllProjectsButton.id = "viewAllProjects";
+  projectHead.id = "projectHead";
+  itemList.id = "itemList";
+
+  navDiv1.appendChild(menuButton);
+  navDiv1.appendChild(homeButton);
+  navDiv1.appendChild(inputText);
+  nav.appendChild(navDiv1);
+  nav.appendChild(navDiv2);
+  navDiv2.appendChild(navUserStuff);
+  sidebar.appendChild(todayToDoButton);
+  projects.appendChild(viewAllProjectsButton);
+  sidebar.appendChild(projects);
+  main.appendChild(projectHead);
+  main.appendChild(itemList);
+  document.body.appendChild(nav);
+  document.body.appendChild(sidebar);
+  document.body.appendChild(main);
+
+  document
+    .getElementById("viewAllProjects")
+    .addEventListener("click", initStorage);
+  // call storage loading function here
+  initStorage();
+}
+
 // storage logic
 function initStorage() {
   projects = JSON.parse(localStorage.getItem("projects"));
   const itemList = document.getElementById("itemList");
-  itemList.innerHTML = ''
+  itemList.innerHTML = "";
   if (projects) {
     // what to do when data is found.
     const header = document.getElementById("projectHead");
@@ -61,9 +82,8 @@ function populateTodos(projects) {
     const task = new TodoElement(projects.tasks[i]);
     itemList.appendChild(task);
   }
-  itemList.appendChild(addItem())
+  itemList.appendChild(addItem());
 }
-
 
 /* we can use localstorage to store data, but it must be converted with JSON.stringify
 localStorage.setItem('tasks',JSON.stringify(task1data))
