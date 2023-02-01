@@ -16,6 +16,10 @@ main {
   flex-direction: column;
 }
 
+#itemList {
+    display: flex;
+    flex-direction: column;
+}
 .todo {
   border: 1px solid black;
   border-radius: 7px;

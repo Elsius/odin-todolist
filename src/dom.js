@@ -1,37 +1,38 @@
 import { addItem, createProjectElement, TodoElement } from "./todo";
-
+let projects = {}
 // initial HTML load
 function init() {
   document.body.innerHTML = `
-<nav>
-    <div>
-      <button>Menu</button>
-      <button>Home</button>
+  <nav>
+  <div>
+  <button>Menu</button>
+  <button>Home</button>
       <input type="text">
-    </div>
-    <div>
+      </div>
+      <div>
       user stuff here
-    </div>
-  </nav>
-  <sidebar>
-    <button id="todayToDo">Today</button>
-    <div id="projects">
+      </div>
+      </nav>
+      <sidebar>
+      <button id="todayToDo">Today</button>
+      <div id="projects">
       <button id="viewAllProjects">View Projects</button>
-    </div>
+      </div>
   </sidebar>
   <main>
   <h1 id='projectHead'></h1>
     <div id='itemList'></div>
-  </main>`;
-  // call storage loading function here
-  initStorage();
-}
-
+    </main>`;
+    document.getElementById('viewAllProjects').addEventListener('click', initStorage)
+    // call storage loading function here
+    initStorage();
+  }
+  
 // storage logic
 function initStorage() {
-  const projects = JSON.parse(localStorage.getItem("projects"));
+  projects = JSON.parse(localStorage.getItem("projects"));
   const itemList = document.getElementById("itemList");
-  console.table(projects);
+  itemList.innerHTML = ''
   if (projects) {
     // what to do when data is found.
     const header = document.getElementById("projectHead");
@@ -50,9 +51,7 @@ function initStorage() {
   }
 }
 function populateTodos(projects) {
-  // adds Todos of project to itemList, needs rewrite
-  console.log("populate to dos!");
-  console.log(projects);
+  // adds Todos of project to itemList
   const itemList = document.getElementById("itemList");
   itemList.innerHTML = "";
   const projectName = document.getElementById("projectHead");
@@ -64,6 +63,8 @@ function populateTodos(projects) {
   }
   itemList.appendChild(addItem())
 }
+
+
 /* we can use localstorage to store data, but it must be converted with JSON.stringify
 localStorage.setItem('tasks',JSON.stringify(task1data))
 after which, we must convert it back with JSON.parse

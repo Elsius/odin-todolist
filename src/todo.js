@@ -64,10 +64,8 @@ function createProjectElement(projects) {
 }
 
 function addItem() {
-  const container = document.createElement("div");
-  container.innerHTML = `
-    <button>New Item</button>
-    `;
+  const container = document.createElement("button");
+  container.textContent = 'New Item'
   container.classList.add("todo");
   return container;
 }
