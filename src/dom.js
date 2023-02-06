@@ -1,4 +1,9 @@
-import { addItem, createProjectElement, TodoElement } from "./todo";
+import {
+  addItem,
+  createItemUI,
+  createProjectElement,
+  TodoElement,
+} from "./todo";
 let projects = {};
 // initial HTML load
 function init() {
@@ -72,6 +77,7 @@ function initStorage() {
   }
 }
 function populateTodos(projects) {
+  console.table(projects);
   // adds Todos of project to itemList
   const itemList = document.getElementById("itemList");
   itemList.innerHTML = "";
@@ -82,7 +88,7 @@ function populateTodos(projects) {
     const task = new TodoElement(projects.tasks[i]);
     itemList.appendChild(task);
   }
-  itemList.appendChild(addItem());
+  itemList.appendChild(addItem("todo"));
 }
 
 /* we can use localstorage to store data, but it must be converted with JSON.stringify
