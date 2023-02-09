@@ -1,6 +1,5 @@
 import {
   addItem,
-  createItemUI,
   createProjectElement,
   TodoElement,
 } from "./todo";
@@ -49,51 +48,115 @@ function init() {
 
   document
     .getElementById("viewAllProjects")
-    .addEventListener("click", initStorage);
+    .addEventListener("click", render.main);
   // call storage loading function here
   initStorage();
+  render.main()
 }
 
 // storage logic
 function initStorage() {
   projects = JSON.parse(localStorage.getItem("projects"));
-  const itemList = document.getElementById("itemList");
-  itemList.innerHTML = "";
-  if (projects) {
-    // what to do when data is found.
-    const header = document.getElementById("projectHead");
-    header.textContent = `To Do`;
-    // populate itemList with list of projects
-    for (let i = 0; i < projects.length; i++) {
+
+}
+// render function to handle any changes to DOM beyond init
+const render = {
+  clearMain: function(){
+    const itemList = document.getElementById('itemList');
+    const header = document.getElementById('projectHead');
+    const newItemOverlay = document.getElementById('newItemOverlay');
+    itemList.innerHTML = ''
+    header.textContent = '';
+    if (newItemOverlay){
+      newItemOverlay.outerHTML = ''
+    }
+  },
+  main: function(){
+    render.clearMain()
+    const itemList = document.getElementById('itemList');
+    const header = document.getElementById('projectHead');
+    itemList.innerHTML = ''
+    header.textContent = 'To Do';
+    // populate main
+    for (let i = 0; i < projects.length; i++){
       const projectElement = createProjectElement(projects[i]);
       itemList.appendChild(projectElement);
     }
-    // new item here
+    // new item button
     itemList.appendChild(addItem());
-  } else {
-    // what to do if nothing was pulled
-    // initProjects()?
-    console.log(`nothing was pulled! tasklist was ${projects}`);
-  }
+  },
+  populateTodos(projects) {
+    render.clearMain()
+    // adds Todos of project to itemList
+    const itemList = document.getElementById("itemList");
+    const projectName = document.getElementById("projectHead");
+    projectName.textContent = `${projects.title}`;
+    // for loop that reads over projects object and creates TODOs and pins to DOM
+    for (let i = 0; i < projects.tasks.length; i++) {
+      const task = new TodoElement(projects.tasks[i]);
+      itemList.appendChild(task);
+    }
+    itemList.appendChild(addItem("todo"));
+  },
+  createItemUI(type) {
+    // if type == todo, create inputs for additional args
+    // newItemOverlay position should be detached from DOM
+    if (document.getElementById("newItemOverlay")) {
+      document.getElementById("newItemOverlay").outerHTML = "";
+    }
+    const overlayContainer = document.createElement("form");
+    overlayContainer.id = "newItemOverlay";
+  
+    const inputContainer = document.createElement("div");
+    inputContainer.classList.add("inputOverlay");
+    overlayContainer.appendChild(inputContainer);
+  
+    const createInputWithLabel = (labelText, inputId, inputType = "text") => {
+      const inputBox = document.createElement("div");
+      inputContainer.appendChild(inputBox);
+      const label = document.createElement("label");
+      label.setAttribute("for", inputId);
+      const labelTextNode = document.createTextNode(labelText);
+      label.appendChild(labelTextNode);
+      const input = document.createElement("input");
+      input.id = inputId;
+      input.type = inputType;
+      inputBox.appendChild(label);
+      inputBox.appendChild(input);
+    };
+    createInputWithLabel("Title", "inputTitle");
+    createInputWithLabel("Description", "inputDescription");
+  
+    if (type == "todo") {
+      createInputWithLabel("Due-Date", "inputDate");
+      createInputWithLabel("Priority", "inputPriority");
+      createInputWithLabel("Notes", "inputNotes");
+      // duedate, priority, notes, checked
+    }
+  
+    const addButton = document.createElement("button");
+    addButton.textContent = "Submit";
+    overlayContainer.appendChild(addButton);
+    addButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      const inputs = overlayContainer.elements;
+      const inputData = {};
+      for (let i = 0; i < inputs.length - 1; i++) {
+        inputData[inputs[i].id] = inputs[i].value;
+      }
+      console.log(inputData);
+      // this data should be inputted to a storage function then delete the ui
+  
+      document.getElementById("newItemOverlay").outerHTML = "";
+    });
+    return overlayContainer;
+  },
 }
-function populateTodos(projects) {
-  console.table(projects);
-  // adds Todos of project to itemList
-  const itemList = document.getElementById("itemList");
-  itemList.innerHTML = "";
-  const projectName = document.getElementById("projectHead");
-  projectName.textContent = `${projects.title}`;
-  // for loop that reads over projects object and creates TODOs and pins to DOM
-  for (let i = 0; i < projects.tasks.length; i++) {
-    const task = new TodoElement(projects.tasks[i]);
-    itemList.appendChild(task);
-  }
-  itemList.appendChild(addItem("todo"));
-}
+
 
 /* we can use localstorage to store data, but it must be converted with JSON.stringify
 localStorage.setItem('tasks',JSON.stringify(task1data))
 after which, we must convert it back with JSON.parse
 const task2Data = localStorage.getItem('tasks')
 const task2 = new TodoElement(JSON.parse(task2Data)) */
-export { init, populateTodos };
+export { init, render };
