@@ -2,8 +2,8 @@ import {
   addItem,
   createProjectElement,
   TodoElement,
+  state,
 } from "./todo";
-let projects = {};
 // initial HTML load
 function init() {
   const nav = document.createElement("nav");
@@ -50,15 +50,10 @@ function init() {
     .getElementById("viewAllProjects")
     .addEventListener("click", render.main);
   // call storage loading function here
-  initStorage();
+  state.init()
   render.main()
 }
 
-// storage logic
-function initStorage() {
-  projects = JSON.parse(localStorage.getItem("projects"));
-
-}
 // render function to handle any changes to DOM beyond init
 const render = {
   clearMain: function(){
@@ -78,8 +73,8 @@ const render = {
     itemList.innerHTML = ''
     header.textContent = 'To Do';
     // populate main
-    for (let i = 0; i < projects.length; i++){
-      const projectElement = createProjectElement(projects[i]);
+    for (let i = 0; i < state.data.length; i++){
+      const projectElement = createProjectElement(state.data[i]);
       itemList.appendChild(projectElement);
     }
     // new item button
@@ -97,59 +92,6 @@ const render = {
       itemList.appendChild(task);
     }
     itemList.appendChild(addItem("todo"));
-  },
-  createItemUI(type) {
-    // if type == todo, create inputs for additional args
-    // newItemOverlay position should be detached from DOM
-    if (document.getElementById("newItemOverlay")) {
-      document.getElementById("newItemOverlay").outerHTML = "";
-    }
-    const overlayContainer = document.createElement("form");
-    overlayContainer.id = "newItemOverlay";
-  
-    const inputContainer = document.createElement("div");
-    inputContainer.classList.add("inputOverlay");
-    overlayContainer.appendChild(inputContainer);
-  
-    const createInputWithLabel = (labelText, inputId, inputType = "text") => {
-      const inputBox = document.createElement("div");
-      inputContainer.appendChild(inputBox);
-      const label = document.createElement("label");
-      label.setAttribute("for", inputId);
-      const labelTextNode = document.createTextNode(labelText);
-      label.appendChild(labelTextNode);
-      const input = document.createElement("input");
-      input.id = inputId;
-      input.type = inputType;
-      inputBox.appendChild(label);
-      inputBox.appendChild(input);
-    };
-    createInputWithLabel("Title", "inputTitle");
-    createInputWithLabel("Description", "inputDescription");
-  
-    if (type == "todo") {
-      createInputWithLabel("Due-Date", "inputDate");
-      createInputWithLabel("Priority", "inputPriority");
-      createInputWithLabel("Notes", "inputNotes");
-      // duedate, priority, notes, checked
-    }
-  
-    const addButton = document.createElement("button");
-    addButton.textContent = "Submit";
-    overlayContainer.appendChild(addButton);
-    addButton.addEventListener("click", function (event) {
-      event.preventDefault();
-      const inputs = overlayContainer.elements;
-      const inputData = {};
-      for (let i = 0; i < inputs.length - 1; i++) {
-        inputData[inputs[i].id] = inputs[i].value;
-      }
-      console.log(inputData);
-      // this data should be inputted to a storage function then delete the ui
-  
-      document.getElementById("newItemOverlay").outerHTML = "";
-    });
-    return overlayContainer;
   },
 }
 
