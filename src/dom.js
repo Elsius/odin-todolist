@@ -1,9 +1,4 @@
-import {
-  addItem,
-  createProjectElement,
-  TodoElement,
-  state,
-} from "./todo";
+import { addItem, createProjectElement, TodoElement, state } from "./todo";
 // initial HTML load
 function init() {
   const nav = document.createElement("nav");
@@ -48,40 +43,42 @@ function init() {
 
   document
     .getElementById("viewAllProjects")
-    .addEventListener("click", render.main);
+    .addEventListener("click", () => {state.currentPage = 'There'
+    render.main()
+});
   // call storage loading function here
-  state.init()
-  render.main()
+  state.init();
+  render.main();
 }
 
 // render function to handle any changes to DOM beyond init
 const render = {
-  clearMain: function(){
-    const itemList = document.getElementById('itemList');
-    const header = document.getElementById('projectHead');
-    const newItemOverlay = document.getElementById('newItemOverlay');
-    itemList.innerHTML = ''
-    header.textContent = '';
-    if (newItemOverlay){
-      newItemOverlay.outerHTML = ''
+  clearMain: function () {
+    const itemList = document.getElementById("itemList");
+    const header = document.getElementById("projectHead");
+    const newItemOverlay = document.getElementById("newItemOverlay");
+    itemList.innerHTML = "";
+    header.textContent = "";
+    if (newItemOverlay) {
+      newItemOverlay.outerHTML = "";
     }
   },
-  main: function(){
-    render.clearMain()
-    const itemList = document.getElementById('itemList');
-    const header = document.getElementById('projectHead');
-    itemList.innerHTML = ''
-    header.textContent = 'To Do';
+  main: function () {
+    render.clearMain();
+    const itemList = document.getElementById("itemList");
+    const header = document.getElementById("projectHead");
+    itemList.innerHTML = "";
+    header.textContent = "To Do";
     // populate main
-    for (let i = 0; i < state.data.length; i++){
-      const projectElement = createProjectElement(state.data[i]);
+    for (let i = 0; i < state.data.length; i++) {
+      const projectElement = createProjectElement(state.data[i],i);
       itemList.appendChild(projectElement);
     }
     // new item button
     itemList.appendChild(addItem());
   },
   populateTodos(projects) {
-    render.clearMain()
+    render.clearMain();
     // adds Todos of project to itemList
     const itemList = document.getElementById("itemList");
     const projectName = document.getElementById("projectHead");
@@ -93,8 +90,7 @@ const render = {
     }
     itemList.appendChild(addItem("todo"));
   },
-}
-
+};
 
 /* we can use localstorage to store data, but it must be converted with JSON.stringify
 localStorage.setItem('tasks',JSON.stringify(task1data))
