@@ -18,7 +18,7 @@ class Project {
 }
 
 class TodoElement {
-  constructor(todoData) {
+  constructor(todoData,itemIndex) {
     const todoElement = document.createElement("div");
 
     const checkboxInput = document.createElement("input");
@@ -43,6 +43,11 @@ class TodoElement {
     deleteButton.classList.add("delete");
     deleteButton.textContent = "D";
     buttonBox.appendChild(deleteButton);
+    deleteButton.addEventListener('click', (e) => {
+      e.stopPropagation()
+      state.deleteData(itemIndex)
+      render.populateTodos(state.data[state.currentPage])
+    })
 
     const editButton = document.createElement("button");
     editButton.classList.add("edit");
@@ -77,19 +82,27 @@ function createProjectElement(projects,projectIndex) {
   deleteButton.className = "delete";
   deleteButton.textContent = "D";
   buttonsDiv.appendChild(deleteButton);
+  deleteButton.addEventListener('click', (e) => {
+    e.stopPropagation()
+    state.deleteData(projectIndex)
+    render.main()
+  })
 
   const editButton = document.createElement("button");
   editButton.className = "edit";
   editButton.textContent = "E";
   buttonsDiv.appendChild(editButton);
+  editButton.addEventListener('click', (e) => {
+    e.stopPropagation()
+  })
 
   projectElement.appendChild(input);
   projectElement.appendChild(titleDiv);
   projectElement.appendChild(descriptionDiv);
   projectElement.appendChild(buttonsDiv);
   projectElement.addEventListener("click", () =>{
-    render.populateTodos(projects)
-    state.currentPage = projectIndex
+      render.populateTodos(projects)
+      state.currentPage = projectIndex
   }
   );
   projectElement.classList.add("todo");
@@ -105,7 +118,8 @@ function addItem(type) {
   );
   return container;
 }
-function createItemUI(type) {
+function createItemUI(type,edit) {
+  // add edit arg, if edit exists, prefill the form and change submit to change data instead of adding
   // if type == todo, create inputs for additional args
   // newItemOverlay position should be detached from DOM
   const overlayContainer = document.createElement("form");
@@ -138,10 +152,10 @@ function createItemUI(type) {
     // duedate, priority, notes, checked
   }
 
-  const addButton = document.createElement("button");
-  addButton.textContent = "Submit";
-  overlayContainer.appendChild(addButton);
-  addButton.addEventListener("click", function (event) {
+  const submitButton = document.createElement("button");
+  submitButton.textContent = "Submit";
+  overlayContainer.appendChild(submitButton);
+  submitButton.addEventListener("click", function (event) {
     event.preventDefault();
     const inputs = overlayContainer.elements;
     const inputData = {};
@@ -151,8 +165,9 @@ function createItemUI(type) {
     // clean inputted data here
     // if inputCheck(inputData) returns true, state.addData(inputData,type) and delete the overlay, else return error
     // add cleaned data to storage and remove overlay
-    state.addData(inputData, type);
-    // document.getElementById("newItemOverlay").outerHTML = "";
+    if (edit === undefined){
+      state.addData(inputData, type);
+    }
   });
   return overlayContainer;
 }
@@ -160,15 +175,16 @@ function createItemUI(type) {
 // storage function?
 const state = {
   data: [],
-  currentPage: '',
+  currentPage: 'Home',
   init: function () {
     state.data = JSON.parse(localStorage.getItem("projects"));
     if (this.data === null) {
       this.data = [];
     }
-    // eslint-disable-next-line no-const-assign
-    state.currentPage = "Home";
     // if projects.length < 1, render intro page?
+  },
+  save: function(){
+    localStorage.setItem("projects", JSON.stringify(state.data))
   },
   addData: function (inputData, type) {
     // currently assuming data is cleaned
@@ -176,17 +192,23 @@ const state = {
       // opens up data based on currentPage and appends todo to that project
       const newTodo = new TodoData(inputData)
       this.data[this.currentPage].tasks.push(newTodo)
-      localStorage.setItem("projects", JSON.stringify(state.data))
+      this.save()
       render.populateTodos(this.data[this.currentPage])
     } else {
       // append new project to data, save to storage, and render
       const newProject = new Project(inputData.title, inputData.description);
       this.data.push(newProject);
-      localStorage.setItem("projects", JSON.stringify(state.data));
+      this.save()
       render.main();
     }
   },
+  deleteData: function(index){
+    if (this.currentPage === 'Home'){
+      this.data.splice(index,1)
+    } else {
+      this.data[this.currentPage].tasks.splice(index,1)
+    }
+    this.save()
+  },
 };
-
-// document.body.appendChild(createItemUI('todo'))
 export { TodoData, Project, TodoElement, createProjectElement, addItem, state };

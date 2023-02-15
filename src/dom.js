@@ -43,7 +43,7 @@ function init() {
 
   document
     .getElementById("viewAllProjects")
-    .addEventListener("click", () => {state.currentPage = 'There'
+    .addEventListener("click", () => {state.currentPage = 'Home'
     render.main()
 });
   // call storage loading function here
@@ -85,7 +85,7 @@ const render = {
     projectName.textContent = `${projects.title}`;
     // for loop that reads over projects object and creates TODOs and pins to DOM
     for (let i = 0; i < projects.tasks.length; i++) {
-      const task = new TodoElement(projects.tasks[i]);
+      const task = new TodoElement(projects.tasks[i],i);
       itemList.appendChild(task);
     }
     itemList.appendChild(addItem("todo"));
