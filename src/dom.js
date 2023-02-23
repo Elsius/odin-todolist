@@ -41,11 +41,10 @@ function init() {
   document.body.appendChild(sidebar);
   document.body.appendChild(main);
 
-  document
-    .getElementById("viewAllProjects")
-    .addEventListener("click", () => {state.currentPage = 'Home'
-    render.main()
-});
+  document.getElementById("viewAllProjects").addEventListener("click", () => {
+    state.currentPage = "Home";
+    render.main();
+  });
   // call storage loading function here
   state.init();
   render.main();
@@ -71,7 +70,7 @@ const render = {
     header.textContent = "To Do";
     // populate main
     for (let i = 0; i < state.data.length; i++) {
-      const projectElement = createProjectElement(state.data[i],i);
+      const projectElement = createProjectElement(state.data[i], i);
       itemList.appendChild(projectElement);
     }
     // new item button
@@ -85,13 +84,12 @@ const render = {
     projectName.textContent = `${projects.title}`;
     // for loop that reads over projects object and creates TODOs and pins to DOM
     for (let i = 0; i < projects.tasks.length; i++) {
-      const task = new TodoElement(projects.tasks[i],i);
+      const task = new TodoElement(projects.tasks[i], i);
       itemList.appendChild(task);
     }
     itemList.appendChild(addItem("todo"));
   },
 };
-
 /* we can use localstorage to store data, but it must be converted with JSON.stringify
 localStorage.setItem('tasks',JSON.stringify(task1data))
 after which, we must convert it back with JSON.parse
