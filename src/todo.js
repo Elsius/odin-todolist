@@ -37,6 +37,10 @@ class TodoElement {
     priority.textContent = todoData.priority;
     todoElement.appendChild(priority);
 
+    const dueDate = document.createElement("div");
+    dueDate.textContent = todoData.dueDate;
+    todoElement.appendChild(dueDate);
+
     const buttonBox = document.createElement("div");
 
     const deleteButton = document.createElement("button");
@@ -55,8 +59,8 @@ class TodoElement {
     buttonBox.appendChild(editButton);
     editButton.addEventListener("click", (e) => {
       e.stopPropagation();
-      createItemUI("todo",itemIndex)
-    })
+      createItemUI("todo", itemIndex);
+    });
 
     todoElement.appendChild(buttonBox);
 
@@ -98,7 +102,7 @@ function createProjectElement(projects, projectIndex) {
   buttonsDiv.appendChild(editButton);
   editButton.addEventListener("click", (e) => {
     e.stopPropagation();
-createItemUI('',projectIndex);
+    createItemUI("", projectIndex);
   });
 
   projectElement.appendChild(input);
@@ -117,9 +121,7 @@ function addItem(type) {
   const container = document.createElement("button");
   container.textContent = "New Item";
   container.classList.add("todo");
-  container.addEventListener("click", () =>
-  createItemUI(type)
-  );
+  container.addEventListener("click", () => createItemUI(type));
   return container;
 }
 function createItemUI(type, editIndex) {
@@ -127,8 +129,9 @@ function createItemUI(type, editIndex) {
   // edit arg is item index so it can be called and filled with info it will be editing
   // if type == todo, create inputs for additional args
   // newItemOverlay position should be detached from DOM
-  if (document.getElementById('newItemOverlay')){ // check for existing
-    document.getElementById('newItemOverlay').outerHTML = ''
+  if (document.getElementById("newItemOverlay")) {
+    // check for existing
+    document.getElementById("newItemOverlay").outerHTML = "";
   }
   const overlayContainer = document.createElement("form");
   overlayContainer.id = "newItemOverlay";
@@ -153,30 +156,30 @@ function createItemUI(type, editIndex) {
   };
   createInputWithLabel("Title", "title");
   createInputWithLabel("Description", "description");
-  
+
   if (type == "todo") {
-    createInputWithLabel("Due-Date", "date");
+    createInputWithLabel("Date Due", "date","date");
     createInputWithLabel("Priority", "priority");
     createInputWithLabel("Notes", "notes");
     // duedate, priority, notes, checked
   }
   // check for edit arg to fill in form
   // if (edit == true){ fillUI()} ???
-  if (editIndex !== undefined){
-    const editTitle = document.getElementById('title')
-    const editDesc = document.getElementById('description')
-    editTitle.value = state.data[editIndex].title
-    editDesc.value = state.data[editIndex].description
+  if (editIndex !== undefined) {
+    const editTitle = document.getElementById("title");
+    const editDesc = document.getElementById("description");
+    editTitle.value = state.data[editIndex].title;
+    editDesc.value = state.data[editIndex].description;
     if (state.currentPage !== "Home") {
-      const currentTask = state.data[state.currentPage].tasks[editIndex]
-      const editDueDate = document.getElementById('date')
-      const editPriority = document.getElementById('priority')
-      const editNotes = document.getElementById('notes')
-      editTitle.value = currentTask.title
-      editDesc.value = currentTask.description
-      editDueDate.value = currentTask.dueDate
-      editPriority.value= currentTask.priority
-      editNotes.value = currentTask.notes
+      const currentTask = state.data[state.currentPage].tasks[editIndex];
+      const editDueDate = document.getElementById("date");
+      const editPriority = document.getElementById("priority");
+      const editNotes = document.getElementById("notes");
+      editTitle.value = currentTask.title;
+      editDesc.value = currentTask.description;
+      editDueDate.value = currentTask.dueDate;
+      editPriority.value = currentTask.priority;
+      editNotes.value = currentTask.notes;
     }
   }
   const submitButton = document.createElement("button");
@@ -192,10 +195,11 @@ function createItemUI(type, editIndex) {
     // clean inputted data here
     // if inputCheck(inputData) returns true, state.addData(inputData,type) and delete the overlay, else return error
     // if edit = true, check data by edit location, else add cleaned data to storage and remove overlay
-    if (editIndex === undefined) { // undefined means not an edit, so submit as new data
+    if (editIndex === undefined) {
+      // undefined means not an edit, so submit as new data
       state.addData(inputData, type);
-    } else if (editIndex !== undefined){
-      state.editData(inputData, editIndex)
+    } else if (editIndex !== undefined) {
+      state.editData(inputData, editIndex);
     }
   });
 }
@@ -241,23 +245,23 @@ const state = {
   // pass in arguments state.currentPage, index of item
   // if currentPage = Home, its a project edit, else its a todo
   // when submitting, if its a home, edit info at projectIndex, else edit info at projectIndex/Todo index.
-  editData: function(inputData,index){
-    if (this.currentPage === "Home"){
-      this.data[index].title = inputData.title
-      this.data[index].description = inputData.description
-      this.save()
-      render.main()
+  editData: function (inputData, index) {
+    if (this.currentPage === "Home") {
+      this.data[index].title = inputData.title;
+      this.data[index].description = inputData.description;
+      this.save();
+      render.main();
     } else {
       // call createItemUI, pass in arg for todo and index of item clicked
       // createItemUI('todo','0') should prefill form with first task of the project at state.currentPage
-      const oldTask = state.data[state.currentPage].tasks[index]
-      oldTask.title = inputData.title
-      oldTask.description = inputData.description
-      oldTask.notes = inputData.notes
-      oldTask.priority = inputData.priority
-      oldTask.dueDate = inputData.date
-      this.save()
-      render.populateTodos(state.data[this.currentPage])
+      const oldTask = state.data[state.currentPage].tasks[index];
+      oldTask.title = inputData.title;
+      oldTask.description = inputData.description;
+      oldTask.notes = inputData.notes;
+      oldTask.priority = inputData.priority;
+      oldTask.dueDate = inputData.date;
+      this.save();
+      render.populateTodos(state.data[this.currentPage]);
     }
   },
 };

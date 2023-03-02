@@ -25,7 +25,12 @@ function init() {
   viewAllProjectsButton.id = "viewAllProjects";
   projectHead.id = "projectHead";
   itemList.id = "itemList";
-
+  
+  menuButton.setAttribute('disabled','')
+  homeButton.setAttribute('disabled','')
+  inputText.setAttribute('disabled','')
+  todayToDoButton.setAttribute('disabled','')
+  
   navDiv1.appendChild(menuButton);
   navDiv1.appendChild(homeButton);
   navDiv1.appendChild(inputText);
